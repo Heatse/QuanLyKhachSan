@@ -49,14 +49,6 @@ export default function LoginScreen() {
                     onChange={handleChange}
                     value={formData.password}
                 />
-                <input
-                    type="password"
-                    placeholder="Confirm password"
-                    className="form--input"
-                    name="passwordConfirm"
-                    onChange={handleChange}
-                    value={formData.passwordConfirm}
-                />
 
                 <div className="form--marketing">
                     <input

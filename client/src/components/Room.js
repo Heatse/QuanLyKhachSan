@@ -1,15 +1,11 @@
-import React from "react";
+import React from 'react'
 
-export default function Card() {
+function Room(room) {
     return (
-        <div className="card">
-            <img src="../images/phong.jpg" className="card--image" />
-            <div className="card--stats">
-                <img />
-                <span>5.0</span>
-                <span>(6) • </span>
-                <span>USA</span>
-            </div>
+        <div>
+            <h1>{room.name}</h1>
         </div>
     )
 }
+
+export default Room

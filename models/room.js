@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const roomSchema = mongoose.Schema({
     name: {
-        type: Sting,
+        type: String,
         required: true
     },
 
@@ -15,6 +15,12 @@ const roomSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+
+    rentoerday: {
+        type: Number,
+        required: true
+    },
+
     imageurls: [],
     currentbookings: [],
 
