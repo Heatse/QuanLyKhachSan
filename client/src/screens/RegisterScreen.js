@@ -1,88 +1,74 @@
 import React, { useState } from "react"
+import { Link } from "react-router-dom"
 
-export default function LoginScreen() {
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-        passwordConfirm: "",
-        joinedNewsletter: true
-    })
+export default function RegisterScreen() {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [cpassword, setCpassword] = useState('');
 
-    function handleChange(event) {
-        const { name, value, type, checked } = event.target
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            [name]: type === "checkbox" ? checked : value
-        }))
+    function register() {
+
+        if (password == cpassword) {
+            const user = {
+                name,
+                email,
+                password,
+                cpassword
+            }
+            console.log(user)
+        }
+        else {
+            alert('Password not match')
+        }
     }
 
     function handleSubmit(event) {
         event.preventDefault()
-        if (formData.password === formData.passwordConfirm) {
-            console.log("Successfully signed up")
-        } else {
-            console.log("Passwords do not match")
-            return
-        }
 
-        if (formData.joinedNewsletter) {
-            console.log("Thanks for signing up for our newsletter!")
-        }
     }
 
     return (
         <div className="form-container">
-            <form className="form" onSubmit={handleSubmit}>
+            <form className="form" >
+                <h1 className="text-4xl text-center mb4">Register</h1>
                 <input
                     type="name"
                     placeholder="Name"
                     className="form--input"
-                    name="name"
-                    onChange={handleChange}
-                    value={formData.name}
+                    value={name}
+                    onChange={e => setName(e.target.value)}
                 />
                 <input
                     type="email"
                     placeholder="Email address"
                     className="form--input"
-                    name="email"
-                    onChange={handleChange}
-                    value={formData.email}
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     className="form--input"
-                    name="password"
-                    onChange={handleChange}
-                    value={formData.password}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                 />
                 <input
                     type="password"
                     placeholder="Confirm password"
                     className="form--input"
-                    name="passwordConfirm"
-                    onChange={handleChange}
-                    value={formData.passwordConfirm}
+                    value={cpassword}
+                    onChange={e => setCpassword(e.target.value)}
                 />
 
-                <div className="form--marketing">
-                    <input
-                        id="okayToEmail"
-                        type="checkbox"
-                        name="joinedNewsletter"
-                        onChange={handleChange}
-                        checked={formData.joinedNewsletter}
-                    />
-                    <label htmlFor="okayToEmail">I want to join the newsletter</label>
-                </div>
-                <button
-                    className="form--submit"
-                >
+                <button className="form--submit" onClick={register}>
                     Sign up
                 </button>
+                <div>
+                    Allready a member ? <Link to={'/Login'}>Login</Link>
+                </div>
             </form>
-        </div>
+        </div >
     )
 }
 
