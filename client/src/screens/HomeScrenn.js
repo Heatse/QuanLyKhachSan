@@ -28,8 +28,8 @@ function HomeScrenn() {
     return (
         <div className='container'>
             <div className='row justify-content-center'>
-                {(rooms.map(room => {
-                    return <div>
+                {loading ? (<h1>loading...</h1>) : (rooms.map(room => {
+                    return <div className='col-md-9 mt-2'>
                         <Room room={room} />
                     </div>;
                 }))}
