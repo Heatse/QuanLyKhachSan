@@ -9,7 +9,7 @@ export default function RegisterScreen() {
 
     function register() {
 
-        if (password == cpassword) {
+        if (password === cpassword) {
             const user = {
                 name,
                 email,
@@ -23,15 +23,10 @@ export default function RegisterScreen() {
         }
     }
 
-    function handleSubmit(event) {
-        event.preventDefault()
-
-    }
-
     return (
         <div className="form-container">
             <form className="form" >
-                <h1 className="text-4xl text-center mb4">Register</h1>
+                <h1 className="text-4xl text-center mb4">Đăng Kí</h1>
                 <input
                     type="name"
                     placeholder="Name"

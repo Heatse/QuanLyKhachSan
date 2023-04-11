@@ -9,7 +9,7 @@ function HomeScrenn() {
     const [error, seterror] = useState([])
 
     useEffect(() => {
-        const gets = async () => {
+        const fetchData = async () => {
             try {
                 setloading(true)
                 const data = (await axios.get('http://localhost:5000/api/rooms/rooms')).data
@@ -22,11 +22,11 @@ function HomeScrenn() {
                 setloading(false)
             }
         }
-        gets();
+        fetchData();
     }, [])
 
     return (
-        <div className='container'>
+        <div className='container' >
             <div className='row justify-content-center'>
                 {loading ? (<h1>loading...</h1>) : (rooms.map(room => {
                     return <div className='col-md-9 mt-2'>

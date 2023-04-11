@@ -6,6 +6,7 @@ export default function LoginScreen() {
     return (
         <div className="form-container">
             <form className="form" >
+                <h1 className="text-4xl text-center mb4">Đăng nhập</h1>
                 <input
                     type="email"
                     placeholder="Email address"
