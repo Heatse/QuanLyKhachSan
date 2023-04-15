@@ -17,8 +17,8 @@ const roomSchema = mongoose.Schema({
         required: true
     },
 
-    rentoerday: {
-        type: Number,
+    rentperday: {
+        type: String,
         required: true
     },
 

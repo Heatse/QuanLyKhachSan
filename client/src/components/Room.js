@@ -14,12 +14,14 @@ function Room({ room }) {
             </div>
             <div className='col-md-7'>
                 <h1>{room.name}</h1>
-                <b> <p>Số lượng: {room.maxcount}</p>
+                <b>
+                    {" "}
+                    <p>Số lượng: {room.maxcount}</p>
                     <p>Số điện thoại: {room.phonenumber}</p>
                     <p>Kiểu phòng: {room.type}</p></b>
 
                 <div style={{ float: 'right' }}>
-                    <Link to={'/book/${room._id}'}>
+                    <Link to={`/book/${room._id}`}>
                         <button className='btn btn-primary m-2'>Đặt Phòng</button>
                     </Link>
                     <button className='btn btn-primary' onClick={handleShow} > Xem Phòng </button>
