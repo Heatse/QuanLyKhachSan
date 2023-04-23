@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import Loading from "../components/Loading";
-import Success from "../components/Success";
 import Error from "../components/Error";
 import axios from "axios";
 
@@ -13,7 +12,7 @@ export default function LoginScreen() {
     const [loading, setloading] = useState(false)
     const [error, seterror] = useState()
 
-    async function login() {
+    async function Login() {
 
 
         const user = {
@@ -22,17 +21,17 @@ export default function LoginScreen() {
         }
         try {
             setloading(true)
-            const result = await axios.post('http://localhost:5000/api/users/login', user).data
+            const result = await axios.post('http://localhost:5000/api/users/login', user)
+                .then(data => data)
             setloading(false)
 
             localStorage.setItem('currentUser', JSON.stringify(result));
-            window.location.href = '/booking'
+            window.location.href = '/home'
         } catch (error) {
             console.log(error)
             setloading(false)
             seterror(true)
         }
-
     }
 
     return (
@@ -58,7 +57,7 @@ export default function LoginScreen() {
                     />
                     <Link className="underline text-bn" to={'/forget-password'}>Quên mật khẩu ?</Link>
 
-                    <button className="form--submit" onClick={login}>
+                    <button className="form--submit" onClick={Login}>
                         Đăng nhập
                     </button>
                     <div>

@@ -13,7 +13,7 @@ code {
 }
 
 .navbar {
-  background-color: black !important;
+  background-color: green !important;
 }
 .nav-link {
   color: aliceblue !important;
@@ -26,6 +26,11 @@ code {
 
 .navbar-nav {
   margin-left: auto !important;
+}
+
+.nav-item {
+  border: 2px solid black;
+  justify-content: space-around;
 }
 
 .form-container {
@@ -83,11 +88,27 @@ code {
   border-radius: 5px;
 }
 
+.bigimg {
+  height: 400px;
+  width: 100% !important;
+  border-radius: 5px;
+}
+
 h1 {
   font-size: 20px !important;
 }
 
+p {
+  font-size: 16px !important;
+}
+
 .bs {
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-  margin-top: 20px;
+  margin-top: 20px !important;
+  border-radius: 5px !important;
+  padding: 20px !important;
+}
+
+.dropdown-toggle {
+  border: 0px solid black !important;
 }

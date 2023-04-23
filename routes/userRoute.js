@@ -34,6 +34,7 @@ router.post("/login/", async (req, res) => {
             return res.status(400).json({ message: "Sai thông tin đăng nhập" });
         }
     } catch (error) {
+        console.log(error)
         return res.status(400).json({ error });
     }
 

@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const dbConfig = require('./db');
 const roomRoute = require('./routes/roomRoute');
 const userRoute = require('./routes/userRoute')
+const bookingRoute = require('./routes/bookingRoute')
 
 const bodyParser = require("body-parser")
 
@@ -22,6 +23,7 @@ app.use(express.json())
 
 app.use('/api/rooms', roomRoute)
 app.use('/api/users', userRoute)
+app.use('/api/bookings', bookingRoute)
 
 const port = process.env.Port || 5000;
 

@@ -29,14 +29,15 @@ export default function RegisterScreen() {
             }
             try {
                 setloading(true);
-                const result = await axios.post('http://localhost:5000/api/users/register', user).data
+                const result = await axios.post('http://localhost:5000/api/users/register', user)
+                    .then(data => data)
                 setloading(false)
                 setsuccess(true)
 
-                // setName('')
-                // setEmail('')
-                // setPassword('')
-                // setCpassword('')
+                setName('')
+                setEmail('')
+                setPassword('')
+                setCpassword('')
 
             } catch (error) {
                 console.log(error)
@@ -52,49 +53,52 @@ export default function RegisterScreen() {
     return (
         <div>
             {loading && (<Loading />)}
-            {error && (<Error />)}
+
 
             <div className="form-container">
-
+                {error && (<Error message='Đăng kí khong thành công' />)}
                 {success && (<Success message='Đăng kí thành công' />)}
-                <div className="form" >
-                    <h1 className="text-4xl text-center mb4">Đăng Kí</h1>
-                    <input
-                        type="name"
-                        placeholder="Name"
-                        className="form--input"
-                        value={name}
-                        onChange={e => { setName(e.target.value) }}
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email address"
-                        className="form--input"
-                        value={email}
-                        onChange={e => { setEmail(e.target.value) }}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        className="form--input"
-                        value={password}
-                        onChange={e => { setPassword(e.target.value) }}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Confirm password"
-                        className="form--input"
-                        value={cpassword}
-                        onChange={e => { setCpassword(e.target.value) }}
-                    />
+                <div>
+                    <div className="form" >
+                        <h1 className="text-4xl text-center mb4">Đăng Kí</h1>
+                        <input
+                            type="name"
+                            placeholder="Name"
+                            className="form--input"
+                            value={name}
+                            onChange={e => { setName(e.target.value) }}
+                        />
+                        <input
+                            type="email"
+                            placeholder="Email address"
+                            className="form--input"
+                            value={email}
+                            onChange={e => { setEmail(e.target.value) }}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            className="form--input"
+                            value={password}
+                            onChange={e => { setPassword(e.target.value) }}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Confirm password"
+                            className="form--input"
+                            value={cpassword}
+                            onChange={e => { setCpassword(e.target.value) }}
+                        />
 
-                    <button className="form--submit" onClick={register}>
-                        Đăng kí
-                    </button>
-                    <div>
-                        Allready a member ? <Link to={'/Login'}>Login</Link>
+                        <button className="form--submit" onClick={register}>
+                            Đăng kí
+                        </button>
+                        <div>
+                            Allready a member ? <Link to={'/Login'}>Login</Link>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
