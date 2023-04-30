@@ -25,4 +25,24 @@ router.post("/getroombyid", async (req, res) => {
     }
 })
 
+router.post("/addroom", async (req, res) => {
+
+    const newroom = new Room({
+        name: req.body.name,
+        maxCount: req.body.maxCount,
+        phoneNumber: req.body.phoneNumber,
+        rentperday: req.body.rentperday,
+        imageurls: req.body.imageurls,
+        type: req.body.type,
+        description: req.body.description
+    });
+
+    try {
+        const saveroom = await newroom.save();
+        res.send('Thêm phòng thành công')
+    } catch (error) {
+        return res.status(400).json({ message: error });
+    }
+})
+
 module.exports = router;

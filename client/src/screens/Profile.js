@@ -66,17 +66,39 @@ export function MyBooking() {
         fetchData();
     }, [])
 
+    // async function cancelBooking(bookingid, roomid) {
+    //     try {
+    //         setloading(true)
+    //         const result = await axios.post('http://localhost:5000/api/bookings/cancelbooking', { bookingid, roomid }).then(data => data)
+    //         console.log(result)
+    //         setloading(false)
+    //         setsuccess(true)
+    //     } catch (error) {
+    //         console.log(error)
+    //         setloading(false)
+    //         seterror(true)
+    //     }
+    // }
+
     async function cancelBooking(bookingid, roomid) {
         try {
-            setloading(true)
-            const result = await axios.post('http://localhost:5000/api/bookings/cancelbooking', { bookingid, roomid }).data
-            console.log(result)
-            setloading(false)
-            setsuccess(true)
+            await axios.post('http://localhost:5000/api/bookings/cancelbooking', {
+                bookingid: bookingid,
+                roomid: roomid
+            }).data
+            setsuccess("Hủy phòng thành công")
+            const updatedBookings = booking.filter(b => b._id !== bookingid)
+            setBooking(updatedBookings)
         } catch (error) {
+            seterror("Đã có lỗi xảy ra")
             console.log(error)
-            setloading(false)
-            seterror(true)
+        }
+    }
+
+    async function handleCancel(bookingid, roomid) {
+        const confirmCancel = window.confirm("Bạn có chắc chắn muốn hủy đặt phòng này không?")
+        if (confirmCancel) {
+            await cancelBooking(bookingid, roomid)
         }
     }
 
@@ -98,7 +120,7 @@ export function MyBooking() {
                                 <p><b>Trạng Thái</b>: {booking.status === 'booked' ? 'Đã Hủy' : 'Đã Đặt'}</p>
 
                                 <div className='text-right'>
-                                    <button className='btn btn-primary' onClick={() => { cancelBooking(booking._id, booking.roomid) }}>
+                                    <button className='btn btn-primary' onClick={() => { handleCancel(booking._id, booking.roomid) }}>
                                         Hủy Đặt Phòng
                                     </button>
                                 </div>
