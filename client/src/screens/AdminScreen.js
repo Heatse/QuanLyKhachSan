@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Tabs } from 'antd';
 import axios from 'axios';
 import Loading from '../components/Loading';
+import Swal from 'sweetalert2';
 const { TabPane } = Tabs;
 
 
 
 function AdminScreen() {
 
-    // useEffect(() => {
-    //     if (!JSON.parse(localStorage.getItem("currentUser")).isAdmin) {
-    //         window.location.href = '/home'
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (!JSON.parse(localStorage.getItem("currentUser")).data.isAdmin) {
+            window.location.href = '/home'
+        }
+    }, [])
 
 
     function callback(key) {
@@ -74,7 +75,7 @@ export function Booking() {
     return (
         <div className='row'>
             <div className='col-md-10'>
-                <h1>Booking</h1>
+                <h1>Danh Sách Đặt Phòng</h1>
                 {loading && <Loading />}
                 <table>
                     <table className='table table-bordered'>
@@ -85,7 +86,7 @@ export function Booking() {
                                 <th>Phòng</th>
                                 <th>Ngày đặt</th>
                                 <th>Ngày trả</th>
-                                <th>Id phòng</th>
+                                <th>Trạng thái</th>
                             </tr>
                         </thead>
 
@@ -136,7 +137,7 @@ export function Room() {
     return (
         <div className='row'>
             <div className='col-md-10'>
-                <h1>Rooms</h1>
+                <h1>Danh Sách Phòng</h1>
                 {loading && <Loading />}
                 <table>
                     <table className='table table-bordered'>
@@ -198,7 +199,7 @@ export function Customer() {
     return (
         <div className='row'>
             <div className='col-md-12'>
-                <h1>Customer</h1>
+                <h1>Danh Sách Khách hàng</h1>
                 {loading && <Loading />}
                 <table>
                     <table className='table table-bordered'>
@@ -232,54 +233,62 @@ export function Customer() {
 
 
 export function AddRoom() {
-
+    const [loading, setloading] = useState(false)
     const [name, setName] = useState('')
-    const [rent, setRent] = useState()
-    const [count, setCount] = useState()
-    const [desc, setDesc] = useState()
-    const [phone, setPhone] = useState()
+    const [rentperday, setRentperday] = useState()
+    const [maxCount, setMaxCount] = useState()
+    const [description, setDescription] = useState()
+    const [phoneNumber, setPhoneNumber] = useState()
     const [type, setType] = useState()
-    const [linkimg1, setLinkimg1] = useState()
-    const [linkimg2, setLinkimg2] = useState()
-    const [linkimg3, setLinkimg3] = useState()
+    const [imageurl1, setImageurl1] = useState()
+    const [imageurl2, setImageurl2] = useState()
+    const [imageurl3, setImageurl3] = useState()
 
     async function addRoom() {
 
         const newroom = {
             name,
-            rent,
-            count,
-            desc,
-            phone,
+            rentperday,
+            maxCount,
+            description,
+            phoneNumber,
             type,
-            imageurls: [linkimg1, linkimg2, linkimg3]
+            imageurls: [imageurl1, imageurl2, imageurl3]
         }
 
         try {
+            setloading(true)
             const result = await (await axios.post('http://localhost:5000/api/rooms/addroom', newroom)).data
             console.log(result)
+            setloading(false)
+            Swal.fire('Chúc mừng bạn', "Bạn đã thêm phòng thành công", 'success').then(result => {
+                window.location.href = '/home'
+            })
         } catch (error) {
             console.log(error)
+            setloading(false)
+            Swal.fire('Lỗi', "Đã có lỗi xảy ra", 'error')
         }
     }
 
     return (
         <div className='row'>
+            {loading && <Loading />}
             <div className='col-md-5'>
                 <input type='text' className='form-control' placeholder='Tên Phòng'
                     value={name} onChange={(e) => { setName(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='Giá Phòng'
-                    value={rent} onChange={(e) => { setRent(e.target.value) }}
+                    value={rentperday} onChange={(e) => { setRentperday(e.target.value) }}
                 />
-                <input type='text' className='form-control' placeholder='Só Lượng'
-                    value={count} onChange={(e) => { setCount(e.target.value) }}
+                <input type='text' className='form-control' placeholder='Số Lượng'
+                    value={maxCount} onChange={(e) => { setMaxCount(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='Mô tả'
-                    value={desc} onChange={(e) => { setDesc(e.target.value) }}
+                    value={description} onChange={(e) => { setDescription(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='Số điện thoại'
-                    value={phone} onChange={(e) => { setPhone(e.target.value) }}
+                    value={phoneNumber} onChange={(e) => { setPhoneNumber(e.target.value) }}
                 />
             </div>
 
@@ -288,13 +297,13 @@ export function AddRoom() {
                     value={type} onChange={(e) => { setType(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='LinkImg1'
-                    value={linkimg1} onChange={(e) => { setLinkimg1(e.target.value) }}
+                    value={imageurl1} onChange={(e) => { setImageurl1(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='LinkImg2'
-                    value={linkimg2} onChange={(e) => { setLinkimg2(e.target.value) }}
+                    value={imageurl2} onChange={(e) => { setImageurl2(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='LinkImg3'
-                    value={linkimg3} onChange={(e) => { setLinkimg3(e.target.value) }}
+                    value={imageurl3} onChange={(e) => { setImageurl3(e.target.value) }}
                 />
 
                 <div className='text-right'>

@@ -22,11 +22,10 @@ router.post("/bookroom", async (rep, res) => {
             totalamount,
             totaldays,
             transactionId: '1234',
-            status: 'Đã đặt'
         })
         const booking = await newBooking.save()
 
-        await Room.updateOne(
+        await Room.findOneAndUpdate(
             { _id: room._id },
             {
                 $push: {
@@ -38,7 +37,8 @@ router.post("/bookroom", async (rep, res) => {
                         status: booking.status
                     }
                 }
-            }
+            },
+            { new: true }
         );
 
         res.send("Đặt phòng thành công");
@@ -60,57 +60,31 @@ router.post("/getbookinguser", async (rep, res) => {
     }
 });
 
-// router.post("/cancelbooking", async (rep, res) => {
-//     const { bookingid, roomid } = rep.body
-
-//     try {
-//         const booking = await Booking.findById(bookingid);
-//         if (!booking) {
-//             return res.status(404).json({ message: "Không tìm thấy thông tin đặt phòng" });
-//         }
-//         booking.status = "Đã Hủy";
-//         await booking.save();
-
-//         const room = await Room.findById(roomid);
-//         if (!room) {
-//             return res.status(404).json({ message: "Không tìm thấy thông tin phòng 55" });
-//         }
-//         room.currentbookings = room.currentbookings.filter(
-//             (booking) => booking.bookingid.toString() !== bookingid
-//         );
-//         await room.save();
-
-//         res.send("Bạn đã hủy phòng thành công");
-
-//     } catch (error) {
-//         console.log(error)
-//         return res.status(500).json({ error });
-//     }
-// })
-
 
 router.post("/cancelbooking", async (rep, res) => {
-    const { bookingid, roomid } = rep.body;
+    const { bookingid, roomid } = rep.body
 
     try {
-        const booking = await Booking.findById(bookingid);
-        booking.status = "Đã hủy";
-        await booking.save();
+        const bookingitem = await Booking.findOne({ _id: bookingid });
 
-        const room = await Room.findById(roomid);
-        room.currentbookings = room.currentbookings.map((booking) => {
-            if (booking.bookingid.toString() === bookingid) {
-                booking.status = "Đã hủy";
-            }
-            return booking;
-        });
+        bookingitem.status = "Đã Hủy";
+        await bookingitem.save();
+
+        const room = await Room.findOne({ _id: roomid });
+        const currentBookings = room.currentbookings;
+
+        const updatedBookings = currentBookings.filter(
+            (booking) => booking.bookingid.toString() !== bookingid
+        );
+
+        currentBookings = updatedBookings;
         await room.save();
+        res.send("Hủy Phòng Thành Công")
 
-        res.send("Hủy phòng thành công");
     } catch (error) {
         return res.status(400).json({ error });
     }
-});
+})
 
 router.get("/getallbookings", async (rep, res) => {
 

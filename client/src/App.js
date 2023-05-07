@@ -8,6 +8,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import BookingScreen from './screens/BookingScreen';
 import AdminScreen from './screens/AdminScreen';
 import Profile from './screens/Profile';
+import LandingScrenn from './screens/LandingScrenn';
 // import Home from './components/Home';
 // import Footer from './components/Footer';
 
@@ -29,6 +30,7 @@ function App() {
           <Route path='/register' exact Component={RegisterScreen} key="uniqueId1" />
           <Route path='/admin' exact Component={AdminScreen} key="uniqueId1" />
           <Route path='/profile' exact Component={Profile} key="uniqueId1" />
+          <Route path='/' exact Component={LandingScrenn} key="uniqueId1" />
         </Routes>
       </BrowserRouter>
     </div>

@@ -103,39 +103,41 @@ function HomeScrenn() {
     }
 
     return (
-        <div className='container' >
+        <div className='backgrondIMG' >
+            <div className='container' >
 
-            <div className='row mt-5 bs'>
-                <div className='col-md-3 ml-5'>
-                    <RangePicker format='DD-MM-YYYY' onChange={filterByDate} />
-                </div>
+                <div className='row mt-5 bs'>
+                    <div className='col-md-3 ml-5'>
+                        <RangePicker format='DD-MM-YYYY' onChange={filterByDate} />
+                    </div>
 
-                <div className='col-md-5'>
-                    <input type='text' className='form-control' placeholder='Tìm phòng'
-                        value={search} onChange={(e) => { setSearch(e.target.value) }} onKeyUp={filterBySearch}
-                    />
-                </div>
-
-                <div className='col-md-3'>
-                    <select className='form-control' value={type} onChange={(e) => { filterBytype(e.target.value) }}>
-                        <option value='all'>All</option>
-                        <option value='delux'>Delux</option>
-                        <option value='non-delux'>Non-Delux</option>
-                    </select>
-                </div>
-
-            </div>
-
-            <div className='row justify-content-center mt-5'>
-                {loading ? (<Loading />) : (rooms.map(room => {
-                    return <div className='col-md-9 mt-3'>
-                        <Room
-                            room={room}
-                            fromdate={fromdate}
-                            todate={todate}
+                    <div className='col-md-5'>
+                        <input type='text' className='form-control' placeholder='Tìm phòng'
+                            value={search} onChange={(e) => { setSearch(e.target.value) }} onKeyUp={filterBySearch}
                         />
-                    </div>;
-                }))}
+                    </div>
+
+                    <div className='col-md-3'>
+                        <select className='form-control' value={type} onChange={(e) => { filterBytype(e.target.value) }}>
+                            <option value='all'>All</option>
+                            <option value='delux'>Delux</option>
+                            <option value='non-delux'>Non-Delux</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div className='row justify-content-center mt-5'>
+                    {loading ? (<Loading />) : (rooms.map(room => {
+                        return <div className='col-md-9 mt-3'>
+                            <Room
+                                room={room}
+                                fromdate={fromdate}
+                                todate={todate}
+                            />
+                        </div>;
+                    }))}
+                </div>
             </div>
         </div>
     )

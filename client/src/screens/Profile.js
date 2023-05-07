@@ -21,17 +21,17 @@ function Profile() {
     return (
         <div className='mt-3 ml-3 mr-3'>
             <Tabs Tabs defaultActiveKey='1' >
-                <TabPane tab="thong tin ca nha" key="1">
+                <TabPane tab="Thông tin cá nhân" key="1">
                     <div className='row'>
                         <div className='col-md-5 bs'>
-                            <h1>Thong tin ca nhan</h1> <br />
-                            <h1>Ten: {user.data.name}</h1>
+                            <h1>Thông tin cá nhân</h1> <br />
+                            <h1>Tên: {user.data.name}</h1>
                             <h1>Email: {user.data.email}</h1>
-                            <h1>isAdmin: {user.isAdmin ? 'YES' : 'NO'}</h1>
+                            <h1>isAdmin: {user.data.isAdmin ? 'YES' : 'NO'}</h1>
                         </div>
                     </div>
                 </TabPane>
-                <TabPane tab="lich su dat phong" key="2">
+                <TabPane tab="Lịch sử đặt phòng" key="2">
                     <MyBooking />
                 </TabPane>
             </Tabs>
@@ -66,34 +66,34 @@ export function MyBooking() {
         fetchData();
     }, [])
 
-    // async function cancelBooking(bookingid, roomid) {
-    //     try {
-    //         setloading(true)
-    //         const result = await axios.post('http://localhost:5000/api/bookings/cancelbooking', { bookingid, roomid }).then(data => data)
-    //         console.log(result)
-    //         setloading(false)
-    //         setsuccess(true)
-    //     } catch (error) {
-    //         console.log(error)
-    //         setloading(false)
-    //         seterror(true)
-    //     }
-    // }
-
     async function cancelBooking(bookingid, roomid) {
         try {
-            await axios.post('http://localhost:5000/api/bookings/cancelbooking', {
-                bookingid: bookingid,
-                roomid: roomid
-            }).data
-            setsuccess("Hủy phòng thành công")
-            const updatedBookings = booking.filter(b => b._id !== bookingid)
-            setBooking(updatedBookings)
+            setloading(true)
+            const result = await axios.post('http://localhost:5000/api/bookings/cancelbooking', { bookingid, roomid }).then(data => data)
+            console.log(result)
+            setloading(false)
+            setsuccess(true)
         } catch (error) {
-            seterror("Đã có lỗi xảy ra")
             console.log(error)
+            setloading(false)
+            seterror(true)
         }
     }
+
+    // async function cancelBooking(bookingid, roomid) {
+    //     try {
+    //         await axios.post('http://localhost:5000/api/bookings/cancelbooking', {
+    //             bookingid: bookingid,
+    //             roomid: roomid
+    //         }).data
+    //         setsuccess("Hủy phòng thành công")
+    //         const updatedBookings = booking.filter(b => b._id !== bookingid)
+    //         setBooking(updatedBookings)
+    //     } catch (error) {
+    //         seterror("Đã có lỗi xảy ra")
+    //         console.log(error)
+    //     }
+    // }
 
     async function handleCancel(bookingid, roomid) {
         const confirmCancel = window.confirm("Bạn có chắc chắn muốn hủy đặt phòng này không?")
@@ -117,7 +117,7 @@ export function MyBooking() {
                                 <p><b>Ngày nhận</b>: {booking.fromdate}</p>
                                 <p><b>Ngày trả</b>: {booking.todate}</p>
                                 <p><b>Tổng Tiền</b>: {booking.totalamount} ($)</p>
-                                <p><b>Trạng Thái</b>: {booking.status === 'booked' ? 'Đã Hủy' : 'Đã Đặt'}</p>
+                                <p><b>Trạng Thái</b>: {booking.status === 'booked' ? 'Đã Đặt' : 'Đã Hủy'}</p>
 
                                 <div className='text-right'>
                                     <button className='btn btn-primary' onClick={() => { handleCancel(booking._id, booking.roomid) }}>
