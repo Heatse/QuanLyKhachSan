@@ -4,6 +4,7 @@ import axios from "axios";
 import Loading from "../components/Loading";
 import Error from "../components/Error";
 import moment from 'moment'
+import Swal from 'sweetalert2';
 
 function BookingScreen() {
 
@@ -47,10 +48,18 @@ function BookingScreen() {
 
         }
         try {
+            setloading(true)
             const result = await axios.post('http://localhost:5000/api/bookings/bookroom', BookingDetail)
             console.log(result.data);
+            setloading(false)
+            Swal.fire('Chúc Mừng', 'Đặt phòng thành công', 'success').then(result => {
+                window.location.href = '/profile'
+            })
         } catch (error) {
-            console.error(error);
+            console.log(error)
+            setloading(false)
+            seterror(true)
+            Swal.fire('Lỗi', 'Đạt phòng không thành công', 'error')
 
         }
     }
@@ -90,7 +99,7 @@ function BookingScreen() {
                             </div>
 
                             <div style={{ float: 'right' }}>
-                                <button className="btn btn-primary" onClick={bookRoom} >PayNow</button>
+                                <button className="btn btn-primary" onClick={bookRoom} >Đặt Phòng</button>
                             </div>
                         </div>
                     </div>

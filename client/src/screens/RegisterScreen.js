@@ -4,6 +4,7 @@ import Loading from "../components/Loading";
 import Success from "../components/Success";
 import Error from "../components/Error";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 
 export default function RegisterScreen() {
@@ -39,10 +40,15 @@ export default function RegisterScreen() {
                 setPassword('')
                 setCpassword('')
 
+                Swal.fire('Chúc Mừng', 'Bạn đã đăng kí thành công', 'success').then(result => {
+                    window.location.href = '/login'
+                })
+
             } catch (error) {
                 console.log(error)
                 setloading(false)
                 seterror(true)
+                Swal.fire('Lỗi', 'Đăng kí không thành công', 'error')
             }
         }
         else {
@@ -56,8 +62,6 @@ export default function RegisterScreen() {
 
 
             <div className="form-container">
-                {error && (<Error message='Đăng kí khong thành công' />)}
-                {success && (<Success message='Đăng kí thành công' />)}
                 <div>
                     <div className="form" >
                         <h1 className="text-4xl text-center mb4">Đăng Kí</h1>

@@ -37,4 +37,16 @@ router.post("/addroom", async (req, res) => {
     }
 })
 
+router.delete('/rooms/:id', async (req, res) => {
+    try {
+        const deletedRoom = await Room.findByIdAndRemove(req.params.id);
+        if (!deletedRoom) {
+            return res.status(404).send();
+        }
+        res.send(deletedRoom);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 module.exports = router;

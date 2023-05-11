@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Tabs } from 'antd';
 import axios from 'axios';
 import Loading from "../components/Loading";
-import Error from "../components/Error";
-import Success from "../components/Success";
+import Swal from 'sweetalert2';
+import { Divider, Space, Tag } from 'antd';
 const { TabPane } = Tabs;
 
 
@@ -46,7 +46,6 @@ export function MyBooking() {
     const user = JSON.parse(localStorage.getItem("currentUser"))
     const [booking, setBooking] = useState([])
     const [loading, setloading] = useState(false)
-    const [success, setsuccess] = useState()
     const [error, seterror] = useState()
 
     useEffect(() => {
@@ -72,28 +71,16 @@ export function MyBooking() {
             const result = await axios.post('http://localhost:5000/api/bookings/cancelbooking', { bookingid, roomid }).then(data => data)
             console.log(result)
             setloading(false)
-            setsuccess(true)
+            Swal.fire('Chúc Mừng', 'Hủy phòng thành công', 'success').then(result => {
+                window.location.reload()
+            })
         } catch (error) {
             console.log(error)
             setloading(false)
             seterror(true)
+            Swal.fire('Lỗi', 'Hủy phòng không thành công', 'error')
         }
     }
-
-    // async function cancelBooking(bookingid, roomid) {
-    //     try {
-    //         await axios.post('http://localhost:5000/api/bookings/cancelbooking', {
-    //             bookingid: bookingid,
-    //             roomid: roomid
-    //         }).data
-    //         setsuccess("Hủy phòng thành công")
-    //         const updatedBookings = booking.filter(b => b._id !== bookingid)
-    //         setBooking(updatedBookings)
-    //     } catch (error) {
-    //         seterror("Đã có lỗi xảy ra")
-    //         console.log(error)
-    //     }
-    // }
 
     async function handleCancel(bookingid, roomid) {
         const confirmCancel = window.confirm("Bạn có chắc chắn muốn hủy đặt phòng này không?")
@@ -107,8 +94,6 @@ export function MyBooking() {
             <div className='row'>
                 <div className='col-md-6'>
                     {loading && (<Loading />)}
-                    {error && (<Error message='Đã có lỗi xảy ra' />)}
-                    {success && (<Success message='Hủy phòng thành công' />)}
                     {booking && (booking.map(booking => {
                         return (
                             <div className='bs'>
@@ -117,13 +102,16 @@ export function MyBooking() {
                                 <p><b>Ngày nhận</b>: {booking.fromdate}</p>
                                 <p><b>Ngày trả</b>: {booking.todate}</p>
                                 <p><b>Tổng Tiền</b>: {booking.totalamount} ($)</p>
-                                <p><b>Trạng Thái</b>: {booking.status === 'booked' ? 'Đã Đặt' : 'Đã Hủy'}</p>
+                                <p>
+                                    <b>Trạng Thái</b>: {""}
+                                    {booking.status === 'Đã Hủy' ? (<Tag color='red'>Đã Hủy</Tag>) : (<Tag color="green">Đã Đặt</Tag>)}
+                                </p>
 
-                                <div className='text-right'>
+                                {booking.status !== 'Đã Hủy' && (<div className='text-right'>
                                     <button className='btn btn-primary' onClick={() => { handleCancel(booking._id, booking.roomid) }}>
                                         Hủy Đặt Phòng
                                     </button>
-                                </div>
+                                </div>)}
                             </div>
                         )
                     }))}

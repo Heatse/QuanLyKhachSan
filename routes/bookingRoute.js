@@ -65,21 +65,17 @@ router.post("/cancelbooking", async (rep, res) => {
     const { bookingid, roomid } = rep.body
 
     try {
-        const bookingitem = await Booking.findOne({ _id: bookingid });
-
-        bookingitem.status = "Đã Hủy";
-        await bookingitem.save();
-
-        const room = await Room.findOne({ _id: roomid });
-        const currentBookings = room.currentbookings;
-
-        const updatedBookings = currentBookings.filter(
-            (booking) => booking.bookingid.toString() !== bookingid
+        const booking = await Booking.findOneAndUpdate(
+            { _id: bookingid },
+            { status: "Đã Hủy" },
+            { new: true }
         );
-
-        currentBookings = updatedBookings;
-        await room.save();
-        res.send("Hủy Phòng Thành Công")
+        await Room.findOneAndUpdate(
+            { _id: roomid },
+            { $pull: { currentbookings: { bookingid: booking._id } } },
+            { new: true }
+        );
+        res.send("Hủy Phòng Thành Công");
 
     } catch (error) {
         return res.status(400).json({ error });

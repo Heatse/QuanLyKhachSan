@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import Loading from "../components/Loading";
 import Error from "../components/Error";
+import Success from "../components/Success";
 import axios from "axios";
 
 export default function LoginScreen() {
@@ -11,6 +12,7 @@ export default function LoginScreen() {
 
     const [loading, setloading] = useState(false)
     const [error, seterror] = useState()
+    const [success, setsuccess] = useState()
 
     async function Login() {
 
@@ -24,6 +26,7 @@ export default function LoginScreen() {
             const result = await axios.post('http://localhost:5000/api/users/login', user)
                 .then(data => data)
             setloading(false)
+            setsuccess(true)
 
             localStorage.setItem('currentUser', JSON.stringify(result));
             window.location.href = '/home'
@@ -39,6 +42,7 @@ export default function LoginScreen() {
             {loading && (<Loading />)}
             <div className="form-container">
                 {error && (<Error message='Đăng nhập thất bại' />)}
+                {success && (<Success message='Đăng nhập thành công' />)}
                 <div className="form" >
                     <h1 className="text-4xl text-center mb4">Đăng nhập</h1>
                     <input

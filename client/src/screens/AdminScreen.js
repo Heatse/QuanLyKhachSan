@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import axios from 'axios';
 import Loading from '../components/Loading';
 import Swal from 'sweetalert2';
+import TextArea from 'antd/es/input/TextArea';
 const { TabPane } = Tabs;
 
 
@@ -134,6 +135,26 @@ export function Room() {
         fetchData();
     }, [])
 
+    const deleteRoom = async (roomId) => {
+        try {
+            setloading(true)
+            const response = await axios.delete(`http://localhost:5000/api/rooms/rooms/${roomId}`);
+            setRoom(room.filter(r => r._id !== roomId));
+            setloading(false)
+        } catch (error) {
+            console.log(error);
+            setloading(false)
+            seterror(true)
+        }
+    };
+
+    async function handleDeleteRoom(roomId) {
+        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa phòng dùng này không?")
+        if (confirmDelete) {
+            await deleteRoom(roomId)
+        }
+    }
+
     return (
         <div className='row'>
             <div className='col-md-10'>
@@ -149,6 +170,7 @@ export function Room() {
                                 <th>Tiền thuê</th>
                                 <th>Số lượng</th>
                                 <th>Phone</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -161,6 +183,14 @@ export function Room() {
                                     <td>{room.rentperday}</td>
                                     <td>{room.maxcount}</td>
                                     <td>{room.phonenumber}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleDeleteRoom(room._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
 
                                 </tr>
                             }))}
@@ -196,6 +226,29 @@ export function Customer() {
         fetchData();
     }, [])
 
+    const deleteUser = async (userId) => {
+
+        try {
+            setloading(true);
+            const response = await axios.delete(`http://localhost:5000/api/users/deleteuser/${userId}`);
+            if (response.status === 200) {
+                setUsers(users.filter((user) => user._id !== userId));
+                setloading(false);
+            }
+        } catch (err) {
+            console.log(error);
+            setloading(false)
+            seterror(true)
+        }
+    };
+
+    async function handleDeleteUser(userId) {
+        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")
+        if (confirmDelete) {
+            await deleteUser(userId)
+        }
+    }
+
     return (
         <div className='row'>
             <div className='col-md-12'>
@@ -209,6 +262,7 @@ export function Customer() {
                                 <th>Email</th>
                                 <th>Tên</th>
                                 <th>isAdmin</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -219,6 +273,14 @@ export function Customer() {
                                     <td>{user.email}</td>
                                     <td>{user.name}</td>
                                     <td>{user.isAdmin ? 'YES' : 'NO'}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleDeleteUser(user._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
 
                                 </tr>
                             }))}
@@ -236,9 +298,9 @@ export function AddRoom() {
     const [loading, setloading] = useState(false)
     const [name, setName] = useState('')
     const [rentperday, setRentperday] = useState()
-    const [maxCount, setMaxCount] = useState()
+    const [maxcount, setMaxcount] = useState()
     const [description, setDescription] = useState()
-    const [phoneNumber, setPhoneNumber] = useState()
+    const [phonenumber, setPhonenumber] = useState()
     const [type, setType] = useState()
     const [imageurl1, setImageurl1] = useState()
     const [imageurl2, setImageurl2] = useState()
@@ -249,9 +311,9 @@ export function AddRoom() {
         const newroom = {
             name,
             rentperday,
-            maxCount,
+            maxcount,
             description,
-            phoneNumber,
+            phonenumber,
             type,
             imageurls: [imageurl1, imageurl2, imageurl3]
         }
@@ -282,13 +344,13 @@ export function AddRoom() {
                     value={rentperday} onChange={(e) => { setRentperday(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='Số Lượng'
-                    value={maxCount} onChange={(e) => { setMaxCount(e.target.value) }}
+                    value={maxcount} onChange={(e) => { setMaxcount(e.target.value) }}
                 />
-                <input type='text' className='form-control' placeholder='Mô tả'
+                <TextArea type='text' className='form-control' placeholder='Mô tả'
                     value={description} onChange={(e) => { setDescription(e.target.value) }}
                 />
                 <input type='text' className='form-control' placeholder='Số điện thoại'
-                    value={phoneNumber} onChange={(e) => { setPhoneNumber(e.target.value) }}
+                    value={phonenumber} onChange={(e) => { setPhonenumber(e.target.value) }}
                 />
             </div>
 
