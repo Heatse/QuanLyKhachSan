@@ -16,8 +16,7 @@ function App() {
     <div className="App" key="uniqueId1">
 
       <Navbar />
-      {/* <Home />
-      <Footer /> */}
+
 
       <BrowserRouter key="uniqueId1">
         <Routes key="uniqueId1">

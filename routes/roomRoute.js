@@ -25,15 +25,13 @@ router.post("/getroombyid", async (req, res) => {
     }
 })
 
-router.post("/addroom", async (req, res) => {
-
-    const newroom = new Room(req.body);
-
+router.post('/addroom', async (req, res) => {
     try {
-        const saveroom = await newroom.save();
+        const newroom = new Room(req.body)
+        await newroom.save()
         res.send('Thêm phòng thành công')
     } catch (error) {
-        return res.status(400).json({ message: error });
+        return res.status(400).json({ error });
     }
 })
 
@@ -48,5 +46,18 @@ router.delete('/deleteroom/:id', async (req, res) => {
         res.status(500).send(error);
     }
 });
+
+router.put('/updateroom/:id', async (req, res) => {
+    try {
+        const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedRoom) {
+            return res.status(404).send();
+        }
+        res.send(updatedRoom);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 
 module.exports = router;

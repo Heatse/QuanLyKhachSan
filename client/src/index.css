@@ -290,3 +290,25 @@ textarea,
 select {
   margin-bottom: 10px !important;
 }
+
+.custom-modal .modal-dialog {
+  max-width: 1400px;
+}
+
+.custom-modal .modal-content {
+  padding: 60px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.input-group:last-child {
+  margin-right: 0;
+}

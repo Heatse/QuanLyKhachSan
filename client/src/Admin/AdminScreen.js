@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import TextArea from 'antd/es/input/TextArea';
 import { FaTrashAlt, FaEdit } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
+import EditRoom from './EditRoom';
+import EditUser from './EditUser';
 const { TabPane } = Tabs;
 
 
@@ -121,6 +123,9 @@ export function Room() {
     const [loading, setloading] = useState([])
     const [error, seterror] = useState([])
 
+    const [isShowEditRoom, setIsShowEditRoom] = useState(false)
+    const [selectedRoom, setSelectedRoom] = useState(null);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -138,15 +143,30 @@ export function Room() {
         fetchData();
     }, [])
 
+    const handleClose = () => {
+        setIsShowEditRoom(false)
+    }
+
+    const handleEditRoom = (room) => {
+        setSelectedRoom(room);
+        setIsShowEditRoom(true);
+    };
+
+
     const deleteRoom = async (roomId) => {
         try {
             setloading(true)
             const response = await axios.delete(`http://localhost:5000/api/rooms/deleteroom/${roomId}`);
             setRoom(room.filter(r => r._id !== roomId));
             setloading(false)
-            Swal.fire('Chúc mừng bạn', "Bạn đã xóa phòng thành công", 'success').then(result => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Xóa phòng thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(resrult => {
                 window.location.reload()
-            })
+            });
         } catch (error) {
             console.log(error);
             setloading(false)
@@ -163,58 +183,66 @@ export function Room() {
     }
 
     return (
-        <div className='row'>
-            <div className='col-md-10'>
-                <h1>Danh Sách Phòng</h1>
-                {loading && <Loading />}
-                <table>
-                    <table className='table table-bordered table-striped'>
-                        <thead className='bs table-dark'>
-                            <tr>
-                                <th>Id Phòng</th>
-                                <th>Tên Phòng</th>
-                                <th>Kiểu phòng</th>
-                                <th>Tiền thuê</th>
-                                <th>Số lượng</th>
-                                <th>Phone</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {room.length && (room.map(room => {
-                                return <tr>
-                                    <td>{room._id}</td>
-                                    <td>{room.name}</td>
-                                    <td>{room.type}</td>
-                                    <td>{room.rentperday}</td>
-                                    <td>{room.maxcount}</td>
-                                    <td>{room.phonenumber}</td>
-                                    <td>
-                                        <a
-                                            class="btn btn-success"
-                                            style={{ marginRight: '10px' }}
-                                        >
-                                            <Link to={'/admin/edit/&{room._id}'} >
-                                                <FaEdit />
-                                            </Link>
-                                        </a>
-
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => handleDeleteRoom(room._id)}
-                                        >
-                                            <FaTrashAlt />
-                                        </button>
-                                    </td>
-
+        <div>
+            <div className='row'>
+                <div className='col-md-10'>
+                    <h1>Danh Sách Phòng</h1>
+                    {loading && <Loading />}
+                    <table>
+                        <table className='table table-bordered table-striped'>
+                            <thead className='bs table-dark'>
+                                <tr>
+                                    <th>Id Phòng</th>
+                                    <th>Tên Phòng</th>
+                                    <th>Kiểu phòng</th>
+                                    <th>Tiền thuê</th>
+                                    <th>Số lượng</th>
+                                    <th>Phone</th>
+                                    <th>Action</th>
                                 </tr>
-                            }))}
-                        </tbody>
+                            </thead>
+
+                            <tbody>
+                                {room.length && (room.map(room => {
+                                    return <tr>
+                                        <td>{room._id}</td>
+                                        <td>{room.name}</td>
+                                        <td>{room.type}</td>
+                                        <td>{room.rentperday}</td>
+                                        <td>{room.maxcount}</td>
+                                        <td>{room.phonenumber}</td>
+                                        <td>
+                                            <button
+                                                class="btn btn-success"
+                                                style={{ marginRight: '10px' }}
+                                                onClick={() => handleEditRoom(room)}
+                                            >
+                                                <FaEdit />
+
+                                            </button>
+
+                                            <button
+                                                className="btn btn-danger"
+                                                onClick={() => handleDeleteRoom(room._id)}
+                                            >
+                                                <FaTrashAlt />
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                }))}
+                            </tbody>
+                        </table>
                     </table>
-                </table>
+                </div>
             </div>
+            <EditRoom
+                show={isShowEditRoom}
+                handleClose={handleClose}
+                room={selectedRoom}
+            />
         </div>
+
     )
 }
 
@@ -224,6 +252,9 @@ export function Customer() {
     const [users, setUsers] = useState([])
     const [loading, setloading] = useState([])
     const [error, seterror] = useState([])
+
+    const [isShowEditUser, setIsShowEditUser] = useState(false)
+    const [selectedUser, setSelectedUser] = useState(null);
 
 
     useEffect(() => {
@@ -243,6 +274,16 @@ export function Customer() {
         fetchData();
     }, [])
 
+    const handleClose = () => {
+        setIsShowEditUser(false)
+    }
+
+    const handleEditUser = (user) => {
+        setSelectedUser(user);
+        setIsShowEditUser(true);
+    };
+
+
 
     async function handleDeleteUser(userId) {
         const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")
@@ -253,6 +294,14 @@ export function Customer() {
                 if (response.status === 200) {
                     setUsers(users.filter((user) => user._id !== userId));
                     setloading(false);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Xóa người dùng thành công!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(resrult => {
+                        window.location.reload()
+                    });
                 }
             } catch (err) {
                 console.log(error);
@@ -263,50 +312,58 @@ export function Customer() {
     }
 
     return (
-        <div className='row'>
-            <div className='col-md-12'>
-                <h1>Danh Sách Khách hàng</h1>
-                {loading && <Loading />}
-                <table>
-                    <table className='table table-bordered table-striped'>
-                        <thead className='bs table-dark'>
-                            <tr>
-                                <th>Id Khách Hàng</th>
-                                <th>Email</th>
-                                <th>Tên</th>
-                                <th>isAdmin</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {users.length && (users.map(user => {
-                                return <tr>
-                                    <td>{user._id}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.name}</td>
-                                    <td>{user.isAdmin ? 'YES' : 'NO'}</td>
-                                    <td>
-                                        <a
-                                            class="btn btn-success"
-                                            style={{ marginRight: '10px' }}
-                                        >
-                                            <FaEdit />
-                                        </a>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => handleDeleteUser(user._id)}
-                                        >
-                                            <FaTrashAlt />
-                                        </button>
-                                    </td>
-
+        <div>
+            <div className='row'>
+                <div className='col-md-12'>
+                    <h1>Danh Sách Khách hàng</h1>
+                    {loading && <Loading />}
+                    <table>
+                        <table className='table table-bordered table-striped'>
+                            <thead className='bs table-dark'>
+                                <tr>
+                                    <th>Id Khách Hàng</th>
+                                    <th>Email</th>
+                                    <th>Tên</th>
+                                    <th>isAdmin</th>
+                                    <th>Action</th>
                                 </tr>
-                            }))}
-                        </tbody>
+                            </thead>
+
+                            <tbody>
+                                {users.length && (users.map(user => {
+                                    return <tr>
+                                        <td>{user._id}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.name}</td>
+                                        <td>{user.isAdmin ? 'YES' : 'NO'}</td>
+                                        <td>
+                                            <button
+                                                class="btn btn-success"
+                                                style={{ marginRight: '10px' }}
+                                                onClick={() => handleEditUser(user)}
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                            <button
+                                                className="btn btn-danger"
+                                                onClick={() => handleDeleteUser(user._id)}
+                                            >
+                                                <FaTrashAlt />
+                                            </button>
+                                        </td>
+
+                                    </tr>
+                                }))}
+                            </tbody>
+                        </table>
                     </table>
-                </table>
+                </div>
             </div>
+            <EditUser
+                show={isShowEditUser}
+                handleClose={handleClose}
+                users={selectedUser}
+            />
         </div>
     )
 }
@@ -342,9 +399,14 @@ export function AddRoom() {
             const result = await (await axios.post('http://localhost:5000/api/rooms/addroom', newroom)).data
             console.log(result)
             setloading(false)
-            Swal.fire('Chúc mừng bạn', "Bạn đã thêm phòng thành công", 'success').then(result => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thêm phòng mới thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(resrult => {
                 window.location.reload()
-            })
+            });
         } catch (error) {
             console.log(error)
             setloading(false)
