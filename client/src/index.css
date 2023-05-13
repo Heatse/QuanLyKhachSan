@@ -284,3 +284,9 @@ p {
     background-position: 0 0;
   }
 }
+
+input,
+textarea,
+select {
+  margin-bottom: 10px !important;
+}

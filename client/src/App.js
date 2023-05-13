@@ -6,12 +6,9 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScrenn from './screens/HomeScrenn';
 import RegisterScreen from './screens/RegisterScreen';
 import BookingScreen from './screens/BookingScreen';
-import AdminScreen from './screens/AdminScreen';
+import AdminScreen from './Admin/AdminScreen';
 import Profile from './screens/Profile';
 import LandingScrenn from './screens/LandingScrenn';
-// import Home from './components/Home';
-// import Footer from './components/Footer';
-
 
 
 function App() {

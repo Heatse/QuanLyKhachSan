@@ -4,7 +4,10 @@ import axios from 'axios';
 import Loading from '../components/Loading';
 import Swal from 'sweetalert2';
 import TextArea from 'antd/es/input/TextArea';
+import { FaTrashAlt, FaEdit } from 'react-icons/fa'
+import { Link } from 'react-router-dom';
 const { TabPane } = Tabs;
+
 
 
 
@@ -79,8 +82,8 @@ export function Booking() {
                 <h1>Danh Sách Đặt Phòng</h1>
                 {loading && <Loading />}
                 <table>
-                    <table className='table table-bordered'>
-                        <thead className='bs'>
+                    <table className='table table-bordered table-striped'>
+                        <thead className='bs table-dark'>
                             <tr>
                                 <th>Id Phòng</th>
                                 <th>Id Khách Hàng</th>
@@ -138,13 +141,17 @@ export function Room() {
     const deleteRoom = async (roomId) => {
         try {
             setloading(true)
-            const response = await axios.delete(`http://localhost:5000/api/rooms/rooms/${roomId}`);
+            const response = await axios.delete(`http://localhost:5000/api/rooms/deleteroom/${roomId}`);
             setRoom(room.filter(r => r._id !== roomId));
             setloading(false)
+            Swal.fire('Chúc mừng bạn', "Bạn đã xóa phòng thành công", 'success').then(result => {
+                window.location.reload()
+            })
         } catch (error) {
             console.log(error);
             setloading(false)
             seterror(true)
+            Swal.fire('Oops', "Bạn đã xóa phòng không thành công", 'error')
         }
     };
 
@@ -161,8 +168,8 @@ export function Room() {
                 <h1>Danh Sách Phòng</h1>
                 {loading && <Loading />}
                 <table>
-                    <table className='table table-bordered'>
-                        <thead className='bs'>
+                    <table className='table table-bordered table-striped'>
+                        <thead className='bs table-dark'>
                             <tr>
                                 <th>Id Phòng</th>
                                 <th>Tên Phòng</th>
@@ -184,11 +191,20 @@ export function Room() {
                                     <td>{room.maxcount}</td>
                                     <td>{room.phonenumber}</td>
                                     <td>
+                                        <a
+                                            class="btn btn-success"
+                                            style={{ marginRight: '10px' }}
+                                        >
+                                            <Link to={'/admin/edit/&{room._id}'} >
+                                                <FaEdit />
+                                            </Link>
+                                        </a>
+
                                         <button
                                             className="btn btn-danger"
                                             onClick={() => handleDeleteRoom(room._id)}
                                         >
-                                            Delete
+                                            <FaTrashAlt />
                                         </button>
                                     </td>
 
@@ -209,6 +225,7 @@ export function Customer() {
     const [loading, setloading] = useState([])
     const [error, seterror] = useState([])
 
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -226,26 +243,22 @@ export function Customer() {
         fetchData();
     }, [])
 
-    const deleteUser = async (userId) => {
-
-        try {
-            setloading(true);
-            const response = await axios.delete(`http://localhost:5000/api/users/deleteuser/${userId}`);
-            if (response.status === 200) {
-                setUsers(users.filter((user) => user._id !== userId));
-                setloading(false);
-            }
-        } catch (err) {
-            console.log(error);
-            setloading(false)
-            seterror(true)
-        }
-    };
 
     async function handleDeleteUser(userId) {
         const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")
         if (confirmDelete) {
-            await deleteUser(userId)
+            try {
+                setloading(true);
+                const response = await axios.delete(`http://localhost:5000/api/users/deleteuser/${userId}`);
+                if (response.status === 200) {
+                    setUsers(users.filter((user) => user._id !== userId));
+                    setloading(false);
+                }
+            } catch (err) {
+                console.log(error);
+                setloading(false)
+                seterror(true)
+            }
         }
     }
 
@@ -255,8 +268,8 @@ export function Customer() {
                 <h1>Danh Sách Khách hàng</h1>
                 {loading && <Loading />}
                 <table>
-                    <table className='table table-bordered'>
-                        <thead className='bs'>
+                    <table className='table table-bordered table-striped'>
+                        <thead className='bs table-dark'>
                             <tr>
                                 <th>Id Khách Hàng</th>
                                 <th>Email</th>
@@ -274,11 +287,17 @@ export function Customer() {
                                     <td>{user.name}</td>
                                     <td>{user.isAdmin ? 'YES' : 'NO'}</td>
                                     <td>
+                                        <a
+                                            class="btn btn-success"
+                                            style={{ marginRight: '10px' }}
+                                        >
+                                            <FaEdit />
+                                        </a>
                                         <button
                                             className="btn btn-danger"
                                             onClick={() => handleDeleteUser(user._id)}
                                         >
-                                            Delete
+                                            <FaTrashAlt />
                                         </button>
                                     </td>
 
@@ -301,7 +320,7 @@ export function AddRoom() {
     const [maxcount, setMaxcount] = useState()
     const [description, setDescription] = useState()
     const [phonenumber, setPhonenumber] = useState()
-    const [type, setType] = useState()
+    const [type, setType] = useState([])
     const [imageurl1, setImageurl1] = useState()
     const [imageurl2, setImageurl2] = useState()
     const [imageurl3, setImageurl3] = useState()
@@ -324,7 +343,7 @@ export function AddRoom() {
             console.log(result)
             setloading(false)
             Swal.fire('Chúc mừng bạn', "Bạn đã thêm phòng thành công", 'success').then(result => {
-                window.location.href = '/home'
+                window.location.reload()
             })
         } catch (error) {
             console.log(error)
@@ -355,9 +374,11 @@ export function AddRoom() {
             </div>
 
             <div className='col-md-5'>
-                <input type='text' className='form-control' placeholder='Kiểu phòng'
-                    value={type} onChange={(e) => { setType(e.target.value) }}
-                />
+
+                <select className='form-control' value={type} onChange={(e) => { setType(e.target.value) }}>
+                    <option ><b>Delux</b></option>
+                    <option ><b>Non-Delux</b></option>
+                </select>
                 <input type='text' className='form-control' placeholder='LinkImg1'
                     value={imageurl1} onChange={(e) => { setImageurl1(e.target.value) }}
                 />
