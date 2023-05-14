@@ -27,7 +27,7 @@ function Profile() {
                             <h1>Thông tin cá nhân</h1> <br />
                             <h1>Tên: {user.data.name}</h1>
                             <h1>Email: {user.data.email}</h1>
-                            <h1>isAdmin: {user.data.isAdmin ? 'YES' : 'NO'}</h1>
+                            <h1>Quyền quản lí: {user.data.isAdmin ? (<Tag color='green'>YES</Tag>) : (<Tag color="red">NO</Tag>)}</h1>
                         </div>
                     </div>
                 </TabPane>
