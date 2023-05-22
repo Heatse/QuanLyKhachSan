@@ -78,6 +78,36 @@ export function Booking() {
         fetchData();
     }, [])
 
+    async function deleteBooking(bookingid) {
+        try {
+            setloading(true)
+            await axios.delete(`http://localhost:5000/api/bookings/deletebooking/${bookingid}`);
+            const updatedBooking = booking.filter((booking) => booking._id !== bookingid);
+            setBooking(updatedBooking);
+            setloading(false)
+            Swal.fire({
+                icon: 'success',
+                title: 'Xóa lịch sử đặt phòng thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(resrult => {
+                window.location.reload()
+            });
+        } catch (error) {
+            console.log(error)
+            setloading(false)
+            seterror(true)
+            Swal.fire('Lỗi', 'Xóa lịch sử đặt phòng không thành công', 'error')
+        }
+    }
+
+    async function handleDeleteBooking(bookingid) {
+        const confirmCancel = window.confirm("Bạn có chắc chắn muốn xóa lịch sử đặt phòng này không?")
+        if (confirmCancel) {
+            await deleteBooking(bookingid)
+        }
+    }
+
     return (
         <div className='row'>
             <div className='col-md-10'>
@@ -93,6 +123,7 @@ export function Booking() {
                                 <th>Ngày đặt</th>
                                 <th>Ngày trả</th>
                                 <th>Trạng thái</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -105,6 +136,14 @@ export function Booking() {
                                     <td>{booking.fromdate}</td>
                                     <td>{booking.todate}</td>
                                     <td>{booking.status}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() => handleDeleteBooking(booking._id)}
+                                        >
+                                            <FaTrashAlt />
+                                        </button>
+                                    </td>
 
                                 </tr>
                             }))}

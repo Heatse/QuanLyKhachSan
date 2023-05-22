@@ -92,4 +92,14 @@ router.get("/getallbookings", async (rep, res) => {
     }
 })
 
+router.delete('/deletebooking/:bookingId', async (req, res) => {
+    try {
+        const bookingId = req.params.bookingId;
+        await Booking.findByIdAndRemove(bookingId);
+        res.status(200).json({ message: 'Lịch sử đặt phòng đã được xóa thành công.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Đã xảy ra lỗi khi xóa lịch sử đặt phòng.' });
+    }
+});
+
 module.exports = router
