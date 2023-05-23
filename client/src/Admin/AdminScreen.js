@@ -8,6 +8,9 @@ import { FaTrashAlt, FaEdit } from 'react-icons/fa'
 import { Link } from 'react-router-dom';
 import EditRoom from './EditRoom';
 import EditUser from './EditUser';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 const { TabPane } = Tabs;
 
 
@@ -102,11 +105,22 @@ export function Booking() {
     }
 
     async function handleDeleteBooking(bookingid) {
-        const confirmCancel = window.confirm("Bạn có chắc chắn muốn xóa lịch sử đặt phòng này không?")
-        if (confirmCancel) {
-            await deleteBooking(bookingid)
-        }
+        confirmAlert({
+            title: 'Xác nhận',
+            message: 'Bạn có chắc chắn muốn xóa lịch sử đặt phòng này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => deleteBooking(bookingid)
+                },
+                {
+                    label: 'Không',
+                    onClick: () => { }
+                }
+            ]
+        });
     }
+
 
     return (
         <div className='row'>
@@ -215,10 +229,20 @@ export function Room() {
     };
 
     async function handleDeleteRoom(roomId) {
-        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa phòng dùng này không?")
-        if (confirmDelete) {
-            await deleteRoom(roomId)
-        }
+        confirmAlert({
+            title: 'Xác nhận',
+            message: 'Bạn có chắc chắn muốn xóa phòng này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => deleteRoom(roomId)
+                },
+                {
+                    label: 'Không',
+                    onClick: () => { }
+                }
+            ]
+        });
     }
 
     return (
@@ -322,32 +346,44 @@ export function Customer() {
         setIsShowEditUser(true);
     };
 
-
+    const deleteUser = async (userId) => {
+        try {
+            setloading(true);
+            const response = await axios.delete(`http://localhost:5000/api/users/deleteuser/${userId}`);
+            if (response.status === 200) {
+                setUsers(users.filter((user) => user._id !== userId));
+                setloading(false);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Xóa người dùng thành công!',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(resrult => {
+                    window.location.reload()
+                });
+            }
+        } catch (err) {
+            console.log(error);
+            setloading(false)
+            seterror(true)
+        }
+    }
 
     async function handleDeleteUser(userId) {
-        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")
-        if (confirmDelete) {
-            try {
-                setloading(true);
-                const response = await axios.delete(`http://localhost:5000/api/users/deleteuser/${userId}`);
-                if (response.status === 200) {
-                    setUsers(users.filter((user) => user._id !== userId));
-                    setloading(false);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Xóa người dùng thành công!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(resrult => {
-                        window.location.reload()
-                    });
+        confirmAlert({
+            title: 'Xác nhận',
+            message: 'Bạn có chắc chắn muốn xóa người dùng này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => deleteUser(userId)
+                },
+                {
+                    label: 'Không',
+                    onClick: () => { }
                 }
-            } catch (err) {
-                console.log(error);
-                setloading(false)
-                seterror(true)
-            }
-        }
+            ]
+        });
     }
 
     return (
@@ -363,6 +399,7 @@ export function Customer() {
                                     <th>Id Khách Hàng</th>
                                     <th>Email</th>
                                     <th>Tên</th>
+                                    <th>Mật Khẩu</th>
                                     <th>isAdmin</th>
                                     <th>Action</th>
                                 </tr>
@@ -374,6 +411,7 @@ export function Customer() {
                                         <td>{user._id}</td>
                                         <td>{user.email}</td>
                                         <td>{user.name}</td>
+                                        <td>{user.password}</td>
                                         <td>{user.isAdmin ? 'YES' : 'NO'}</td>
                                         <td>
                                             <button

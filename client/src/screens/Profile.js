@@ -4,6 +4,8 @@ import axios from 'axios';
 import Loading from "../components/Loading";
 import Swal from 'sweetalert2';
 import { Divider, Space, Tag } from 'antd';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 const { TabPane } = Tabs;
 
 
@@ -83,10 +85,20 @@ export function MyBooking() {
     }
 
     async function handleCancel(bookingid, roomid) {
-        const confirmCancel = window.confirm("Bạn có chắc chắn muốn hủy đặt phòng này không?")
-        if (confirmCancel) {
-            await cancelBooking(bookingid, roomid)
-        }
+        confirmAlert({
+            title: 'Xác nhận',
+            message: 'Bạn có chắc chắn muốn hủy đặt phòng này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => cancelBooking(bookingid, roomid)
+                },
+                {
+                    label: 'Không',
+                    onClick: () => { }
+                }
+            ]
+        });
     }
 
     return (

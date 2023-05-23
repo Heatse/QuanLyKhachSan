@@ -11,12 +11,14 @@ const EditUser = (props) => {
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         if (users) {
             setEmail(users.email);
             setName(users.name);
+            setPassword(users.password);
             setIsAdmin(users.isAdmin);
         }
     }, [users]);
@@ -29,6 +31,10 @@ const EditUser = (props) => {
         setName(event.target.value);
     };
 
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+
     const handleIsAdminChange = (event) => {
         setIsAdmin(event.target.checked);
     };
@@ -38,6 +44,7 @@ const EditUser = (props) => {
             const response = await axios.put(`http://localhost:5000/api/users/updateuser/${users._id}`, {
                 email,
                 name,
+                password,
                 isAdmin
             });
             if (response.status === 200) {
@@ -71,6 +78,10 @@ const EditUser = (props) => {
                     <div className="form-group">
                         <label>Tên</label>
                         <input type="text" className="form-control" value={name} onChange={handleNameChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label>Mật Khẩu</label>
+                        <input type="text" className="form-control" value={password} onChange={handlePasswordChange} required />
                     </div>
                     <div className="form-group form-check">
                         <input type="checkbox" className="form-check-input" checked={isAdmin} onChange={handleIsAdminChange} />
