@@ -15,7 +15,9 @@
     "react-bootstrap": "^2.7.2",
     "react-router-dom": "^6.9.0",
     "router": "^1.3.8",
-    "sudo": "^1.0.3"
+    "stripe": "^12.7.0",
+    "sudo": "^1.0.3",
+    "uuid": "^9.0.0"
   },
   "scripts": {
     "start": "node server.js",

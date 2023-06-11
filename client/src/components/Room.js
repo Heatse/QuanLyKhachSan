@@ -33,7 +33,7 @@ function Room({ room, fromdate, todate }) {
             </div>
 
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} size='lg'>
                 <Modal.Header >
                     <Modal.Title>{room.name}</Modal.Title>
                 </Modal.Header>
